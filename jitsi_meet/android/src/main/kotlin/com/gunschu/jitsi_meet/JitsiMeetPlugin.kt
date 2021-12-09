@@ -16,6 +16,8 @@ import io.flutter.plugin.common.PluginRegistry.Registrar
 import org.jitsi.meet.sdk.JitsiMeetConferenceOptions
 import org.jitsi.meet.sdk.JitsiMeetUserInfo
 import java.net.URL
+import com.gunschu.jitsi_meet.platform_view.JitsiViewPlatformViewFactory
+import com.gunschu.jitsi_meet.platform_view.PluginActivityHolder
 
 
 /** JitsiMeetPlugin */
@@ -44,6 +46,9 @@ public class JitsiMeetPlugin() : FlutterPlugin, MethodCallHandler, ActivityAware
 
         eventChannel = EventChannel(flutterPluginBinding.binaryMessenger, JITSI_EVENT_CHANNEL)
         eventChannel.setStreamHandler(JitsiMeetEventStreamHandler.instance)
+
+
+        flutterPluginBinding.platformViewRegistry.registerViewFactory("JitsiWidget",JitsiViewPlatformViewFactory(StandardMessageCodec.INSTANCE));
     }
 
     override fun onDetachedFromEngine(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {
@@ -136,6 +141,7 @@ public class JitsiMeetPlugin() : FlutterPlugin, MethodCallHandler, ActivityAware
                 .setAudioOnly(call.argument("audioOnly") ?: false)
                 .setVideoMuted(call.argument("videoMuted") ?: false)
                 .setUserInfo(userInfo)
+                .setFeatureFlag("pip.enabled",false)
 
         // Add feature flags into options, reading given Map
         if (call.argument<HashMap<String, Any>?>("featureFlags") != null) {
@@ -169,6 +175,7 @@ public class JitsiMeetPlugin() : FlutterPlugin, MethodCallHandler, ActivityAware
      */
     override fun onDetachedFromActivity() {
         this.activity = null
+        PluginActivityHolder.getInstance().activity = null
     }
 
     override fun onReattachedToActivityForConfigChanges(binding: ActivityPluginBinding) {
@@ -177,6 +184,7 @@ public class JitsiMeetPlugin() : FlutterPlugin, MethodCallHandler, ActivityAware
 
     override fun onAttachedToActivity(binding: ActivityPluginBinding) {
         this.activity = binding.activity
+        PluginActivityHolder.getInstance().activity = this.activity
     }
 
     override fun onDetachedFromActivityForConfigChanges() {

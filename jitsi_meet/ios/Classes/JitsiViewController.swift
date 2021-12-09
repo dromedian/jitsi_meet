@@ -71,6 +71,7 @@ class JitsiViewController: UIViewController {
             builder.audioOnly = self.audioOnly ?? false
             builder.audioMuted = self.audioMuted ?? false
             builder.videoMuted = self.videoMuted ?? false
+            builder.setFeatureFlag("pip.enabled", withValue: false)
             builder.token = self.token
             
             self.featureFlags?.forEach{ key,value in
@@ -127,10 +128,13 @@ extension JitsiViewController: JitsiMeetViewDelegate {
         self.eventSink?(mutatedData)
         
         DispatchQueue.main.async {
-            self.pipViewCoordinator?.hide() { _ in
+            /*self.pipViewCoordinator?.hide() { _ in
                 self.cleanUp()
                 self.dismiss(animated: true, completion: nil)
-            }
+            }*/
+
+            self.cleanUp()
+            self.dismiss(animated: true, completion: nil)
         }
         
     }

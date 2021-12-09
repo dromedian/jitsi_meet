@@ -25,6 +25,8 @@ public class SwiftJitsiMeetPlugin: NSObject, FlutterPlugin, FlutterStreamHandler
 
         registrar.addMethodCallDelegate(instance, channel: channel)
 
+        registrar.register(JitsiWidgetFactory(), withId: "JitsiWidget")
+
         // Set up event channel for conference events
         let eventChannelName = "jitsi_meet_events"
 
@@ -98,12 +100,15 @@ public class SwiftJitsiMeetPlugin: NSObject, FlutterPlugin, FlutterStreamHandler
                 result(FlutterError.init(code: "400", message: "arguments are null for method: (joinMeeting)", details: "arguments are null for method: (joinMeeting)"))
             }
 
-            let navigationController = UINavigationController(rootViewController: (self.jitsiViewController)!)
+            /*let navigationController = UINavigationController(rootViewController: (self.jitsiViewController)!)
             navigationController.setNavigationBarHidden(true, animated: false)
             navigationController.modalPresentationStyle = .fullScreen
             navigationController.navigationBar.barTintColor = UIColor.black
             self.uiVC.present(navigationController, animated: true)
-            result(nil)
+            result(nil)*/
+
+            jitsiViewController?.modalPresentationStyle = .fullScreen
+            self.uiVC.present(jitsiViewController!, animated: true, completion: nil)
 
         }else if (call.method == "closeMeeting") {
 
