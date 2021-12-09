@@ -10,8 +10,7 @@ import 'jitsi_meeting_listener.dart';
 
 class JitsiMeet {
   static const MethodChannel _channel = const MethodChannel('jitsi_meet');
-  static const EventChannel _eventChannel =
-  const EventChannel('jitsi_meet_events');
+  static const EventChannel _eventChannel = const EventChannel('jitsi_meet_events');
 
   static List<JitsiMeetingListener> _listeners = <JitsiMeetingListener>[];
   static bool _hasInitialized = false;
@@ -23,40 +22,36 @@ class JitsiMeet {
     multiLine: false,
   );
 
-  static JitsiMeetingWidget getWidget(JitsiMeetingOptions options){
+  static JitsiMeetingWidget getWidget(JitsiMeetingOptions options) {
     assert(options != null, "options are null");
     assert(options.room != null, "room is null");
     assert(options.room.trim().isNotEmpty, "room is empty");
     assert(options.room.trim().length >= 3, "Minimum room length is 3");
-    assert(_allowCharsForRoom.hasMatch(options.room),
-    "Only alphanumeric, dash, and underscore chars allowed");
-
-    // Validate serverURL is absolute if it is not null or empty
-    if ( options.serverURL?.isNotEmpty ?? false) {
-      assert(Uri.parse(options.serverURL).isAbsolute,
-      "URL must be of the format <scheme>://<host>[/path], like https://someHost.com");
-    }
-    return JitsiMeetingWidget(options: options,);
-  }
-
-  /// Joins a meeting based on the JitsiMeetingOptions passed in
-  static Future<JitsiMeetingResponse> joinMeeting(
-      JitsiMeetingOptions options) async {
-    assert(options != null, "options are null");
-    assert(options.room != null, "room is null");
-    assert(options.room.trim().isNotEmpty, "room is empty");
-    assert(options.room.trim().length >= 3, "Minimum room length is 3");
-    assert(_allowCharsForRoom.hasMatch(options.room),
-    "Only alphanumeric, dash, and underscore chars allowed");
+    assert(_allowCharsForRoom.hasMatch(options.room), "Only alphanumeric, dash, and underscore chars allowed");
 
     // Validate serverURL is absolute if it is not null or empty
     if (options.serverURL?.isNotEmpty ?? false) {
-      assert(Uri.parse(options.serverURL).isAbsolute,
-      "URL must be of the format <scheme>://<host>[/path], like https://someHost.com");
+      assert(Uri.parse(options.serverURL).isAbsolute, "URL must be of the format <scheme>://<host>[/path], like https://someHost.com");
+    }
+    return JitsiMeetingWidget(
+      options: options,
+    );
+  }
+
+  /// Joins a meeting based on the JitsiMeetingOptions passed in
+  static Future<JitsiMeetingResponse> joinMeeting(JitsiMeetingOptions options) async {
+    assert(options != null, "options are null");
+    assert(options.room != null, "room is null");
+    assert(options.room.trim().isNotEmpty, "room is empty");
+    assert(options.room.trim().length >= 3, "Minimum room length is 3");
+    assert(_allowCharsForRoom.hasMatch(options.room), "Only alphanumeric, dash, and underscore chars allowed");
+
+    // Validate serverURL is absolute if it is not null or empty
+    if (options.serverURL?.isNotEmpty ?? false) {
+      assert(Uri.parse(options.serverURL).isAbsolute, "URL must be of the format <scheme>://<host>[/path], like https://someHost.com");
     }
 
-    return await _channel
-        .invokeMethod<String>('joinMeeting', <String, dynamic>{
+    return await _channel.invokeMethod<String>('joinMeeting', <String, dynamic>{
       'room': options.room?.trim(),
       'serverURL': options.serverURL?.trim(),
       'subject': options.subject,
@@ -66,13 +61,15 @@ class JitsiMeet {
       'videoMuted': options.videoMuted,
       'userDisplayName': options.userDisplayName,
       'userEmail': options.userEmail,
-    })
-        .then((message) =>
-        JitsiMeetingResponse(isSuccess: true, message: message))
-        .catchError((error) {
+    }).then((message) {
+      if (message != null) {
+        return JitsiMeetingResponse(isSuccess: true, message: message!);
+      } else {
+        return JitsiMeetingResponse(isSuccess: true, message: "ERROR");
+      }
+    }).catchError((error) {
       debugPrint("error: $error, type: ${error.runtimeType}");
-      return JitsiMeetingResponse(
-          isSuccess: false, message: error.toString(), error: error);
+      return JitsiMeetingResponse(isSuccess: false, message: error.toString(), error: error);
     });
   }
 
@@ -87,16 +84,13 @@ class JitsiMeet {
         _listeners.forEach((listener) {
           switch (event) {
             case "onConferenceWillJoin":
-              if (listener.onConferenceWillJoin != null)
-                listener.onConferenceWillJoin();
+              if (listener.onConferenceWillJoin != null) listener.onConferenceWillJoin();
               break;
             case "onConferenceJoined":
-              if (listener.onConferenceJoined != null)
-                listener.onConferenceJoined();
+              if (listener.onConferenceJoined != null) listener.onConferenceJoined();
               break;
             case "onConferenceTerminated":
-              if (listener.onConferenceTerminated != null)
-                listener.onConferenceTerminated();
+              if (listener.onConferenceTerminated != null) listener.onConferenceTerminated();
               break;
           }
         });
@@ -126,7 +120,7 @@ class JitsiMeetingResponse {
   final String message;
   final dynamic error;
 
-  JitsiMeetingResponse({this.isSuccess, this.message, this.error});
+  JitsiMeetingResponse({required this.isSuccess, required this.message, this.error});
 
   @override
   String toString() {
@@ -146,15 +140,15 @@ class JitsiMeetingOptions {
   String userEmail;
 
   JitsiMeetingOptions({
-    this.room,
-    this.serverURL,
-    this.subject,
-    this.token,
-    this.audioMuted,
-    this.audioOnly,
-    this.videoMuted,
-    this.userDisplayName,
-    this.userEmail,
+    required this.room,
+    required this.serverURL,
+    required this.subject,
+    required this.token,
+    required this.audioMuted,
+    required this.audioOnly,
+    required this.videoMuted,
+    required this.userDisplayName,
+    required this.userEmail,
   });
 
   factory JitsiMeetingOptions.fromRawJson(String str) => JitsiMeetingOptions.fromJson(json.decode(str));
@@ -162,26 +156,26 @@ class JitsiMeetingOptions {
   String toRawJson() => json.encode(toJson());
 
   factory JitsiMeetingOptions.fromJson(Map<String, dynamic> json) => JitsiMeetingOptions(
-    room: json["room"] == null ? null : json["room"],
-    serverURL: json["serverURL"] == null ? null : json["serverURL"],
-    subject: json["subject"] == null ? null : json["subject"],
-    token: json["token"] == null ? null : json["token"],
-    audioMuted: json["audioMuted"] == null ? null : json["audioMuted"],
-    audioOnly: json["audioOnly"] == null ? null : json["audioOnly"],
-    videoMuted: json["videoMuted"] == null ? null : json["videoMuted"],
-    userDisplayName: json["userDisplayName"] == null ? null : json["userDisplayName"],
-    userEmail: json["userEmail"] == null ? null : json["userEmail"],
-  );
+        room: json["room"] == null ? null : json["room"],
+        serverURL: json["serverURL"] == null ? null : json["serverURL"],
+        subject: json["subject"] == null ? null : json["subject"],
+        token: json["token"] == null ? null : json["token"],
+        audioMuted: json["audioMuted"] == null ? null : json["audioMuted"],
+        audioOnly: json["audioOnly"] == null ? null : json["audioOnly"],
+        videoMuted: json["videoMuted"] == null ? null : json["videoMuted"],
+        userDisplayName: json["userDisplayName"] == null ? null : json["userDisplayName"],
+        userEmail: json["userEmail"] == null ? null : json["userEmail"],
+      );
 
   Map<String, dynamic> toJson() => {
-    "room": room == null ? null : room,
-    "serverURL": serverURL == null ? null : serverURL,
-    "subject": subject == null ? null : subject,
-    "token": token == null ? null : token,
-    "audioMuted": audioMuted == null ? null : audioMuted,
-    "audioOnly": audioOnly == null ? null : audioOnly,
-    "videoMuted": videoMuted == null ? null : videoMuted,
-    "userDisplayName": userDisplayName == null ? null : userDisplayName,
-    "userEmail": userEmail == null ? null : userEmail,
-  };
+        "room": room == null ? null : room,
+        "serverURL": serverURL == null ? null : serverURL,
+        "subject": subject == null ? null : subject,
+        "token": token == null ? null : token,
+        "audioMuted": audioMuted == null ? null : audioMuted,
+        "audioOnly": audioOnly == null ? null : audioOnly,
+        "videoMuted": videoMuted == null ? null : videoMuted,
+        "userDisplayName": userDisplayName == null ? null : userDisplayName,
+        "userEmail": userEmail == null ? null : userEmail,
+      };
 }
