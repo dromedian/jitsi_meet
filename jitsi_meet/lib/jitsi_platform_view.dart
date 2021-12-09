@@ -35,7 +35,6 @@ class _JitsiMeetingWidgetState extends State<JitsiMeetingWidget>{
     }else{
       return ErrorWidget("Not Implemented");
     }
-    return null;
   }
 
 }
