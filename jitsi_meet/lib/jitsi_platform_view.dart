@@ -8,7 +8,7 @@ class JitsiMeetingWidget extends StatefulWidget{
 
   final JitsiMeetingOptions options;
 
-  const JitsiMeetingWidget({Key key, this.options}) : super(key: key);
+  const JitsiMeetingWidget({Key? key, required this.options}) : super(key: key);
 
 
 
