@@ -72,6 +72,15 @@ class JitsiViewController: UIViewController {
             builder.audioMuted = self.audioMuted ?? false
             builder.videoMuted = self.videoMuted ?? false
             builder.setFeatureFlag("pip.enabled", withValue: false)
+            builder.setFeatureFlag("add-people.enabled", withValue: false)
+            builder.setFeatureFlag("calendar.enabled", withValue: false)
+            builder.setFeatureFlag("chat.enabled", withValue: false)
+            builder.setFeatureFlag("invite.enabled", withValue: false)
+            builder.setFeatureFlag("raise-hand.enabled", withValue: false)
+            builder.setFeatureFlag("toolbox.alwaysVisible", withValue: false)
+            builder.setFeatureFlag("toolbox.enabled", withValue: false)
+            builder.setFeatureFlag("welcomepage.enabled", withValue: false)
+
             builder.token = self.token
             
             self.featureFlags?.forEach{ key,value in
