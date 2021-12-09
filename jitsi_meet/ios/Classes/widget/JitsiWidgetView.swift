@@ -6,7 +6,7 @@
 //
 
 import UIKit
-import JitsiMeet
+import JitsiMeetSDK
 class JitsiWidgetView: NSObject {
 
     var frame:CGRect
