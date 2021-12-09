@@ -8,8 +8,8 @@ class JitsiMeetingListener {
   final Function(dynamic error) onError;
 
   JitsiMeetingListener(
-      {this.onConferenceWillJoin,
-        this.onConferenceJoined,
-        this.onConferenceTerminated,
-        this.onError});
+      {required this.onConferenceWillJoin,
+        required this.onConferenceJoined,
+        required this.onConferenceTerminated,
+        required this.onError});
 }
