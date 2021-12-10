@@ -18,6 +18,7 @@ import org.jitsi.meet.sdk.JitsiMeetUserInfo
 import java.net.URL
 import com.gunschu.jitsi_meet.platform_view.JitsiViewPlatformViewFactory
 import com.gunschu.jitsi_meet.platform_view.PluginActivityHolder
+import io.flutter.plugin.common.StandardMessageCodec
 
 
 /** JitsiMeetPlugin */
