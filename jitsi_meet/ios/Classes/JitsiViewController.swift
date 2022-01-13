@@ -5,7 +5,7 @@ class JitsiViewController: UIViewController {
     
     @IBOutlet weak var videoButton: UIButton?
     
-    fileprivate var pipViewCoordinator: PiPViewCoordinator?
+    //fileprivate var pipViewCoordinator: PiPViewCoordinator?
     fileprivate var jitsiMeetView: JitsiMeetView?
     
     var eventSink:FlutterEventSink? = nil
@@ -51,7 +51,7 @@ class JitsiViewController: UIViewController {
                                      with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
         let rect = CGRect(origin: CGPoint.zero, size: size)
-        pipViewCoordinator?.resetBounds(bounds: rect)
+        //pipViewCoordinator?.resetBounds(bounds: rect)
     }
     
     func openJitsiMeet() {
@@ -94,12 +94,14 @@ class JitsiViewController: UIViewController {
         // Enable jitsimeet view to be a view that can be displayed
         // on top of all the things, and let the coordinator to manage
         // the view state and interactions
-        pipViewCoordinator = PiPViewCoordinator(withView: jitsiMeetView)
-        pipViewCoordinator?.configureAsStickyView(withParentView: view)
+
+
+        /*pipViewCoordinator = PiPViewCoordinator(withView: jitsiMeetView)
+        pipViewCoordinator?.configureAsStickyView(withParentView: view)*/
         
         // animate in
         jitsiMeetView.alpha = 0
-        pipViewCoordinator?.show()
+        //pipViewCoordinator?.show()
     }
     
     func closeJitsiMeeting(){
@@ -109,7 +111,7 @@ class JitsiViewController: UIViewController {
     fileprivate func cleanUp() {
         jitsiMeetView?.removeFromSuperview()
         jitsiMeetView = nil
-        pipViewCoordinator = nil
+        //pipViewCoordinator = nil
         //self.dismiss(animated: true, completion: nil)
     }
 }
@@ -154,7 +156,7 @@ extension JitsiViewController: JitsiMeetViewDelegate {
         mutatedData?.updateValue("onPictureInPictureWillEnter", forKey: "event")
         self.eventSink?(mutatedData)
         DispatchQueue.main.async {
-            self.pipViewCoordinator?.enterPictureInPicture()
+            //self.pipViewCoordinator?.enterPictureInPicture()
         }
     }
     

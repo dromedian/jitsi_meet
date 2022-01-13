@@ -14,7 +14,7 @@ class JitsiWidgetView: NSObject {
     var arguments:[String:Any]
 
     var jitsiMeetView:JitsiMeetView!
-    var pipViewCoordinator: PiPViewCoordinator?
+    //var pipViewCoordinator: PiPViewCoordinator?
 
     init(frame:CGRect,identifier:Int64, arguments:[String:Any]) {
         self.frame = frame
@@ -52,13 +52,13 @@ extension JitsiWidgetView:JitsiMeetViewDelegate{
     func conferenceTerminated(_ data: [AnyHashable : Any]!) {
         print("CONFERENCE TERMINATED")
         self.jitsiMeetView = nil
-        self.pipViewCoordinator = nil
+        //self.pipViewCoordinator = nil
     }
 
     func enterPicture(inPicture data: [AnyHashable : Any]!) {
         print("CONFERENCE PIP")
         DispatchQueue.main.async {
-            self.pipViewCoordinator?.enterPictureInPicture()
+            //self.pipViewCoordinator?.enterPictureInPicture()
         }
     }
 }
